@@ -17,7 +17,15 @@ interface ScheduledMeetDialogProps {
     type: string;
     sessionId: string;
     createdAt: string;
-  }
+}
+
+const InfoRow = ({ icon: Icon, label, value }: { icon: any; label: string; value: string }) => (
+    <div className="flex items-center gap-3 text-sm group hover:bg-white/5 p-2 rounded-lg transition-all duration-200">
+        <Icon className="w-4 h-4 text-[#6032F6] group-hover:scale-110 transition-transform duration-200" />
+        <span className="text-[#A3A3A3] min-w-[60px]">{label}:</span>
+        <span className="text-white font-medium">{value}</span>
+    </div>
+);
   
   const ScheduledMeetDialog: React.FC<ScheduledMeetDialogProps> = ({
     isOpen,
@@ -28,16 +36,7 @@ interface ScheduledMeetDialogProps {
     type,
     sessionId,
     createdAt
-  })
-    const InfoRow = ({ icon: Icon, label, value }: { icon: any; label: string; value: string }) => (
-    <div className="flex items-center gap-3 text-sm group hover:bg-white/5 p-2 rounded-lg transition-all duration-200">
-        <Icon className="w-4 h-4 text-[#6032F6] group-hover:scale-110 transition-transform duration-200" />
-        <span className="text-[#A3A3A3] min-w-[60px]">{label}:</span>
-        <span className="text-white font-medium">{value}</span>
-    </div>
-);
-
-const ScheduledMeetDialog = ({ /* props remain the same */ }) => {
+}) => {
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
             <DialogContent className="bg-gradient-to-b from-[#1E1E1E] to-[#252525] text-white rounded-[10px] p-6 w-full max-w-md border border-[#2C2C2C]/50 shadow-xl backdrop-blur-sm">
