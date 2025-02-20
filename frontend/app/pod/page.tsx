@@ -34,7 +34,6 @@ import DotPattern from "@/components/ui/dot-pattern";
 import { cn } from "@/lib/utils";
 import Fire from "@/assets/icons/Fire";
 import Info from "@/assets/icons/Info";
-import { CreateSessionModal } from "@/components/pod/createSessionModal";
 import { sessionType } from "@/constants";
 
 // Dynamic imports
@@ -42,10 +41,7 @@ const CreateSessionModal = dynamic(
   () => import("@/components/pod/createSessionModal"),
   { ssr: false }
 );
-const CreatedSessionModal = dynamic(
-  () => import("@/components/pod/createdSessionModal"),
-  { ssr: false }
-);
+
 const UserInfoModal = dynamic(() => import("@/components/user/userInfoModal"), {
   ssr: false,
 });
