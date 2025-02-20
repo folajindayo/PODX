@@ -14,6 +14,7 @@ import SimpleTimePicker from "./simpleTimePicker";
 import DotPattern from "../ui/dot-pattern";
 import { cn } from "@/lib/utils";
 import { useEffect } from "react";
+import { toast } from "react-hot-toast";
 
 interface SessionCountProps {
     sessionCount: number;
@@ -49,12 +50,13 @@ const CreateSessionModal: React.FC<CreateSessionModalProps> = ({
         date: undefined,
         time: undefined,
     });
-    
-    useEffect(() => {
-        if (formState.title === DEFAULT_SESSION_TITLE || formState.title.match(/^Session-\d+$/)) {
-            updateFormState({ title: getDefaultSessionTitle(sessionCount) });
+
+    React.useEffect(() => {
+        const defaultTitle = getDefaultSessionTitle(sessionCount);
+        if (!formState.title || formState.title === defaultTitle) {
+            updateFormState({ title: defaultTitle });
         }
-    }, [sessionCount]);
+    }, [sessionCount, formState.title, updateFormState]);
 
     const [isCreating, setIsCreating] = useState(false);
     const [customTime, setCustomTime] = useState("");
@@ -63,18 +65,17 @@ const CreateSessionModal: React.FC<CreateSessionModalProps> = ({
     // Memoized time slots for dropdown
     const timeSlots = React.useMemo(() => Array.from({ length: 24 }, (_, i) => `${i.toString().padStart(2, "0")}:00`), []);
 
-    const validateTime = (time: string): boolean => {
+    const validateTime = React.useCallback((time: string): boolean => {
         const timeRegex = /^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/;
         return timeRegex.test(time);
-    };
+    }, []);
 
-    const isDateTimeInPast = (date: Date, timeStr?: string): boolean => {
-        if (!timeStr) return false;
+    const isDateTimeInPast = React.useCallback((date: Date, timeStr: string): boolean => {
         const [hours, minutes] = timeStr.split(":").map(Number);
         const dateWithTime = new Date(date);
         dateWithTime.setHours(hours, minutes, 0, 0);
         return isBefore(dateWithTime, new Date());
-    };
+    }, []);
 
     const handleTimeChange = (value: string) => {
         setCustomTime(value);
@@ -122,43 +123,41 @@ const CreateSessionModal: React.FC<CreateSessionModalProps> = ({
     }, [formState.date, updateFormState, validateTime, isDateTimeInPast]);
 
     const handleCreateSession = useCallback(async () => {
+    try {
         if (!formState.title.trim()) {
-            toast?.error("Please enter a session title");
-            return;
+            throw new Error("Please enter a session title");
         }
+        
         if (formState.isScheduled && timeError) {
-            toast?.error(timeError);
-            return;
+            throw new Error(timeError);
         }
-    
+
         setIsCreating(true);
-        try {
-            let scheduledDate: Date | undefined;
-    
-            if (formState.isScheduled && formState.date && formState.time) {
-                const [hours, minutes = 0] = formState.time.split(":").map(Number);
-                scheduledDate = new Date(formState.date);
-                scheduledDate.setHours(hours, minutes, 0, 0);
-    
-                // Additional validation for scheduled date
-                if (scheduledDate < new Date()) {
-                    toast?.error("Cannot schedule a session in the past");
-                    return;
-                }
+        let scheduledDate: Date | undefined;
+
+        if (formState.isScheduled && formState.date && formState.time) {
+            const [hours, minutes = 0] = formState.time.split(":").map(Number);
+            scheduledDate = new Date(formState.date);
+            scheduledDate.setHours(hours, minutes, 0, 0);
+
+            if (scheduledDate < new Date()) {
+                throw new Error("Cannot schedule a session in the past");
             }
-    
-            await onCreateSession(formState.title, formState.type, scheduledDate);
-            toast?.success("Session created successfully!");
-            onClose();
-        } catch (error) {
-            toast?.error("Failed to create session. Please try again.");
-            console.error("Session creation error:", error);
-        } finally {
-            setIsCreating(false);
         }
-    }, [formState, onCreateSession, onClose, timeError, toast]);
+
+        await onCreateSession(formState.title, formState.type, scheduledDate);
+        onClose();
+    } catch (error) {
+        console.error("Session creation error:", error);
+        const errorMessage = error instanceof Error ? error.message : "Failed to create session";
+        // Use toast directly without wrapper
+        toast.error(errorMessage);
+    } finally {
+        setIsCreating(false);
+    }
+}, [formState, onCreateSession, onClose, timeError]);
     
-    const updateFormState = useCallback((updates: Partial<SessionFormState>) => {
+    const updateFormState = React.useCallback((updates: Partial<SessionFormState>) => {
         setFormState((prev) => {
             const newState = { ...prev, ...updates };
             // Reset time error when changing schedule type
@@ -169,7 +168,7 @@ const CreateSessionModal: React.FC<CreateSessionModalProps> = ({
         });
     }, []);
     
-    const isSubmitDisabled = useMemo(() => {
+    const isSubmitDisabled = React.useMemo(() => {
         if (isCreating) return true;
         if (!formState.title.trim()) return true;
         if (formState.isScheduled) {

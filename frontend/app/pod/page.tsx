@@ -41,6 +41,10 @@ const CreateSessionModal = dynamic(
   () => import("@/components/pod/createSessionModal"),
   { ssr: false }
 );
+const CreatedSessionModal = dynamic(
+  () => import("@/components/pod/createdSessionModal"),
+  { ssr: false }
+);
 
 const UserInfoModal = dynamic(() => import("@/components/user/userInfoModal"), {
   ssr: false,
@@ -318,7 +322,7 @@ export default function PodPage() {
     } finally {
       setState((prev) => ({ ...prev, isJoiningCreated: false }));
     }
-  }, [state.sessionCode]);
+}, [state.sessionCode, router]);
 
   const handleUpdateUsername = useCallback(
     (newUsername: string) => {
