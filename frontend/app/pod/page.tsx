@@ -1,6 +1,6 @@
 // app/pod/index.tsx
 "use client";
-import { useState, useEffect } from "react";
+import React, { useState, useCallback, useEffect, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import dynamic from "next/dynamic";
