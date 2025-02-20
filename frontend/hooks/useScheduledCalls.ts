@@ -21,7 +21,6 @@ interface UseScheduledCallsReturn {
     getScheduledCall: (sessionId: string) => Promise<ApiResponse<GetScheduledCallResponse | null>>;
 }
 
-
 export const useScheduledCalls = (): UseScheduledCallsReturn => {
     const dispatch = useAppDispatch();
     const scheduledSessions = useAppSelector((state) => state.scheduledSessions.sessions);
@@ -53,11 +52,11 @@ export const useScheduledCalls = (): UseScheduledCallsReturn => {
 
             if ('error' in result) {
                 return {
-                    success: false,
-                    message: 'Failed to fetch scheduled call',
-                    data: null
+                  status: false,  // changed from 'success' to 'status'
+                  message: 'Failed to fetch scheduled call',
+                  data: null
                 };
-            }
+              }
             
             if (!result.data) {
                 return {

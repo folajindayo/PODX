@@ -4,12 +4,11 @@ import { RootState } from '../index';
 import { logOut, setSignature, setUser } from '../slices/userSlice';
 import { SERVER_URL, SIGNATURE_MESSAGE } from '@/constants';
 
-export interface ApiResponse<T> {
-    status: string;
-    message: string;
-    data?: T;
-    error?: boolean;
-}
+export type ApiResponse<T> = {
+    success: boolean;
+    message?: string;
+    data: T;
+};
 
 const baseQuery: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError> = async (args, api, extraOptions) => {
     const result = await fetchBaseQuery({
