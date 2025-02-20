@@ -34,7 +34,6 @@ import DotPattern from "@/components/ui/dot-pattern";
 import { cn } from "@/lib/utils";
 import Fire from "@/assets/icons/Fire";
 import Info from "@/assets/icons/Info";
-import { sessionType } from "@/constants";
 
 // Dynamic imports
 const CreateSessionModal = dynamic(
