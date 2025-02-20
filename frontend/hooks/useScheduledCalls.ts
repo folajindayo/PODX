@@ -85,7 +85,7 @@ export const useScheduledCalls = (): UseScheduledCallsReturn => {
                 if ('error' in result) {
                     return {
                         data: {
-                            ststus: false,
+                            status: false,
                             message: 'Failed to schedule call',
                             data: null
                         }
