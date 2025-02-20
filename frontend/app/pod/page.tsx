@@ -546,7 +546,7 @@ export default function PodPage() {
           <CreatedSessionModal
             isOpen={state.isCreatedModalOpen}
             onClose={() =>
-              setState((prev) => ({ ...prev, isCreatedModalOpen: false }))
+              setState((prev) => ({ ...prev, isCreateModalOpen: false }))
             }
             onCreateSession={handleCreateSession}
             sessionCount={sessionCount} 
