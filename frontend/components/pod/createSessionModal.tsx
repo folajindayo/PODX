@@ -157,16 +157,16 @@ const CreateSessionModal: React.FC<CreateSessionModalProps> = ({
     }
 }, [formState, onCreateSession, onClose, timeError]);
     
-    const updateFormState = React.useCallback((updates: Partial<SessionFormState>) => {
-        setFormState((prev) => {
-            const newState = { ...prev, ...updates };
-            // Reset time error when changing schedule type
-            if ('isScheduled' in updates) {
-                setTimeError('');
-            }
-            return newState;
-        });
-    }, []);
+const updateFormState = React.useCallback((updates: Partial<SessionFormState>) => {
+    setFormState((prev) => {
+        const newState = { ...prev, ...updates };
+        // Reset time error when changing schedule type
+        if ('isScheduled' in updates) {
+            setTimeError('');
+        }
+        return newState;
+    });
+}, [setTimeError]);
     
     const isSubmitDisabled = React.useMemo(() => {
         if (isCreating) return true;
