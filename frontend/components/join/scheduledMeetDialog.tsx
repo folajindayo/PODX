@@ -4,9 +4,32 @@ import { Button } from "@/components/ui/button";
 import { Calendar, User, Clock, Tag, X } from "lucide-react";
 import { format } from "date-fns";
 
-// ... interface remains the same ...
-
-const InfoRow = ({ icon: Icon, label, value }: { icon: any; label: string; value: string }) => (
+interface ScheduledMeetDialogProps {
+    isOpen: boolean;
+    onClose: () => void;
+    sessionTitle: string;
+    startTime: string;
+    creator?: {
+      id: string;
+      name: string;
+      username: string;
+    };
+    type: string;
+    sessionId: string;
+    createdAt: string;
+  }
+  
+  const ScheduledMeetDialog: React.FC<ScheduledMeetDialogProps> = ({
+    isOpen,
+    onClose,
+    sessionTitle,
+    startTime,
+    creator,
+    type,
+    sessionId,
+    createdAt
+  })
+    const InfoRow = ({ icon: Icon, label, value }: { icon: any; label: string; value: string }) => (
     <div className="flex items-center gap-3 text-sm group hover:bg-white/5 p-2 rounded-lg transition-all duration-200">
         <Icon className="w-4 h-4 text-[#6032F6] group-hover:scale-110 transition-transform duration-200" />
         <span className="text-[#A3A3A3] min-w-[60px]">{label}:</span>
