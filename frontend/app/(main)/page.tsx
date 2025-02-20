@@ -42,12 +42,14 @@ export default function LandingPage() {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="min-h-screen flex flex-col items-center justify-center py-12 sm:py-16">
           <motion.div 
-            initial={{ y: -20 }}
-            animate={{ y: 0 }}
-            className="mb-16 sm:mb-20"
+          initial={{ y: -20 }}
+          animate={{ y: 0 }}
+          className="mb-16 sm:mb-20"
           >
-            <Logo className="w-16 h-16 sm:w-20 sm:h-20" />
-          </motion.div>
+            <div className="w-16 h-16 sm:w-20 sm:h-20">
+              <Logo />
+              </div>
+              </motion.div>
 
           <div className="flex flex-col gap-16 sm:gap-20 max-w-4xl mx-auto">
             <div className="flex flex-col items-center gap-8">
