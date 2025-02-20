@@ -188,7 +188,7 @@ const JoinSession: React.FC<JoinSessionProps> = ({ params }) => {
         hasCheckedSchedule.current = true;
 
         const response = await getScheduledCall(code);
-        if (response.status === "success" && response.data?.call) {
+        if (response.status && response.data?.call) { 
             const { call } = response.data;
             setState((prev) => ({
                 ...prev,
