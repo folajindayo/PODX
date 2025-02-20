@@ -60,7 +60,7 @@ export const useScheduledCalls = (): UseScheduledCallsReturn => {
             
             if (!result.data) {
                 return {
-                    success: false,
+                    status: false,
                     message: 'No scheduled call found',
                     data: null
                 };
@@ -70,7 +70,7 @@ export const useScheduledCalls = (): UseScheduledCallsReturn => {
         } catch (error) {
             console.error('Failed to get scheduled call:', error);
             return {
-                success: false,
+                status: false,
                 message: error instanceof Error ? error.message : 'An unexpected error occurred',
                 data: null
             };
@@ -85,7 +85,7 @@ export const useScheduledCalls = (): UseScheduledCallsReturn => {
                 if ('error' in result) {
                     return {
                         data: {
-                            success: false,
+                            ststus: false,
                             message: 'Failed to schedule call',
                             data: null
                         }
@@ -95,7 +95,7 @@ export const useScheduledCalls = (): UseScheduledCallsReturn => {
             } catch (error) {
                 return {
                     data: {
-                        success: false,
+                        status: false,
                         message: error instanceof Error ? error.message : 'Failed to schedule call',
                         data: null
                     }
