@@ -5,7 +5,7 @@ import Footer from "@/components/common/Footer";
 import RetroGrid from "@/components/ui/retro-grid";
 
 const clashGroteskRegular = localFont({
-  src: "../fonts/ClashGrotesk-Regular.woff",
+  src: "../fonts/ClashGrotesk-Medium.woff",
   variable: "--font-clashgrotesk-sans",
   weight: "400",
 });
@@ -16,9 +16,9 @@ const clashgroteskMedium = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Pod X",
+  title: "PodX",
   description:
-    "Real-time meetings by Podx on chain Using your browser, share your video, desktop.",
+    "PodX- Collaborate like Web2, Own like Web3.",
 };
 
 export default function MainLayout({

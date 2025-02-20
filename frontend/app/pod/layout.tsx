@@ -6,25 +6,37 @@ import { LoadingOverlay } from "@/components/ui/loading";
 import { ErrorBoundary } from "@/components/pod/errorBoundary";
 import nextDynamic from "next/dynamic";
 
-// Types
-type LayoutProps = {
+interface LayoutProps {
     children: ReactNode;
     params: {
         id?: string;
     };
-};
+}
 
-// Dynamic import helper
-const DynamicMeetProvider = nextDynamic(() => import("@/providers/meetProvider/index"), {
-    ssr: false,
-    loading: () => (
-        <div className="min-h-screen bg-[#121212]">
-            <LoadingOverlay text="Preparing your session..." />
+const DynamicMeetProvider = nextDynamic(
+    () => import("@/providers/meetProvider/index"),
+    {
+        ssr: false,
+        loading: () => (
+            <div className="min-h-screen bg-[#121212] flex items-center justify-center">
+                <LoadingOverlay 
+                    text="Preparing your session..." 
+                    className="animate-fade-in"
+                />
+            </div>
+        ),
+    }
+);
+
+const ErrorFallback = () => (
+    <div className="min-h-screen bg-[#121212] flex items-center justify-center">
+        <div className="text-white text-center p-6 rounded-lg bg-red-500/10 border border-red-500/20">
+            <h2 className="text-xl font-semibold mb-2">Session Error</h2>
+            <p>Failed to load meeting. Please try again.</p>
         </div>
-    ),
-});
+    </div>
+);
 
-// Memoized layout content component
 const LayoutContent = memo<LayoutProps>(({ children, params }) => {
     const { id } = useParams();
     const router = useRouter();
@@ -33,24 +45,33 @@ const LayoutContent = memo<LayoutProps>(({ children, params }) => {
 
     useEffect(() => {
         setIsMounted(true);
+        return () => setIsMounted(false);
     }, []);
 
     const meetingId = id as string | undefined;
 
-    if (isMounted) {
-        const isValidMeetingId = meetingId ? /^[a-z]{3}-[a-z]{4}-[a-z]{3}$/.test(meetingId) : true;
+    useEffect(() => {
+        if (isMounted) {
+            const isValidMeetingId = meetingId ? 
+                /^[a-z]{3}-[a-z]{4}-[a-z]{3}$/.test(meetingId) : 
+                true;
 
-        if (pathname !== "/pod" && !pathname.startsWith("/pod/join") && !isValidMeetingId) {
-            console.log("Invalid meeting ID and not on join page. Redirecting to /pod");
-            router.push("/pod");
-            return null;
+            if (pathname !== "/pod" && !pathname.startsWith("/pod/join") && !isValidMeetingId) {
+                console.warn("Invalid meeting ID detected. Redirecting to /pod");
+                router.replace("/pod");
+            }
         }
-    }
+    }, [isMounted, meetingId, pathname, router]);
+
+    if (!isMounted) return null;
 
     return (
-        <div className="max-h-screen bg-[#121212]">
-            <ErrorBoundary fallback={<div>Failed to load meeting. Please try again.</div>}>
-                <DynamicMeetProvider meetingId={meetingId} language="en">
+        <div className="max-h-screen bg-[#121212] overflow-hidden">
+            <ErrorBoundary fallback={<ErrorFallback />}>
+                <DynamicMeetProvider 
+                    meetingId={meetingId} 
+                    language="en"
+                >
                     {children}
                 </DynamicMeetProvider>
             </ErrorBoundary>

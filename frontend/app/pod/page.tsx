@@ -1,6 +1,7 @@
 // app/pod/index.tsx
 "use client";
 import React, { useState, useCallback, useEffect, useMemo } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import dynamic from "next/dynamic";
@@ -34,6 +35,8 @@ import DotPattern from "@/components/ui/dot-pattern";
 import { cn } from "@/lib/utils";
 import Fire from "@/assets/icons/Fire";
 import Info from "@/assets/icons/Info";
+import { CreateSessionModal } from "@/components/pod/createSessionModal";
+import { sessionType } from "@/constants";
 
 // Dynamic imports
 const CreateSessionModal = dynamic(
@@ -100,6 +103,16 @@ export default function PodPage() {
   const { scheduledSessions, scheduleCall, getScheduledCall, isLoading } =
     useScheduledCalls();
   const tokenProvider = useStreamTokenProvider();
+  const [sessionCount, setSessionCount] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('sessionCount');
+      return saved ? parseInt(saved, 10) : 0;
+    }
+    return 0;
+  });
+  useEffect(() => {
+    localStorage.setItem('sessionCount', sessionCount.toString());
+  }, [sessionCount]);
   const [activeStep, setActiveStep] = useState(1);
   const [showOnboarding, setShowOnboarding] = useState(true);
 
@@ -163,6 +176,8 @@ export default function PodPage() {
 
   const handleCreateSession = useCallback(
     async (title: string, type: sessionType, scheduledDate?: Date) => {
+      setSessionCount(prev => prev + 1);
+      
       dispatch(clearSessionInfo());
       setNewMeeting(true);
       const newSessionCode = getMeetingId();
@@ -211,17 +226,17 @@ export default function PodPage() {
       }
 
       // Only set invite link and show created modal for instant sessions
-      setState((prev) => ({
-        ...prev,
+      const updates = {
         inviteLink: `https://www.podx.fun/pod/join/${newSessionCode}`,
         sessionCode: newSessionCode,
         isCreateModalOpen: false,
         isCreatedModalOpen: true,
-      }));
+      };
 
+      setState(prev => ({ ...prev, ...updates }));
       dispatch(setSessionInfo(sessionData));
     },
-    [dispatch, setNewMeeting, scheduleCall]
+    [dispatch, setNewMeeting, scheduleCall, setSessionCount]
   );
 
   const handleJoinSession = useCallback(async () => {
@@ -535,6 +550,8 @@ export default function PodPage() {
             onClose={() =>
               setState((prev) => ({ ...prev, isCreatedModalOpen: false }))
             }
+            onCreateSession={handleCreateSession}
+            sessionCount={sessionCount} 
             inviteLink={state.inviteLink}
             sessionCode={state.sessionCode}
             isJoining={state.isJoiningCreated}

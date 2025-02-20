@@ -21,6 +21,7 @@ interface UseScheduledCallsReturn {
     getScheduledCall: (sessionId: string) => Promise<ApiResponse<GetScheduledCallResponse | null>>;
 }
 
+
 export const useScheduledCalls = (): UseScheduledCallsReturn => {
     const dispatch = useAppDispatch();
     const scheduledSessions = useAppSelector((state) => state.scheduledSessions.sessions);
@@ -51,24 +52,56 @@ export const useScheduledCalls = (): UseScheduledCallsReturn => {
             );
 
             if ('error' in result) {
-                throw new Error('Failed to fetch scheduled call');
+                return {
+                    success: false,
+                    message: 'Failed to fetch scheduled call',
+                    data: null
+                };
             }
             
+            if (!result.data) {
+                return {
+                    success: false,
+                    message: 'No scheduled call found',
+                    data: null
+                };
+            }
+
             return result.data as ApiResponse<GetScheduledCallResponse | null>;
         } catch (error) {
             console.error('Failed to get scheduled call:', error);
-            throw error;
+            return {
+                success: false,
+                message: error instanceof Error ? error.message : 'An unexpected error occurred',
+                data: null
+            };
         }
     };
 
     return {
         scheduledSessions,
         scheduleCall: async (args: ScheduleCallArgs) => {
-            const result = await scheduleCallMutation(args);
-            if ('error' in result) {
-                throw result.error;
+            try {
+                const result = await scheduleCallMutation(args);
+                if ('error' in result) {
+                    return {
+                        data: {
+                            success: false,
+                            message: 'Failed to schedule call',
+                            data: null
+                        }
+                    };
+                }
+                return { data: result.data as ApiResponse<StreamCallData> };
+            } catch (error) {
+                return {
+                    data: {
+                        success: false,
+                        message: error instanceof Error ? error.message : 'Failed to schedule call',
+                        data: null
+                    }
+                };
             }
-            return { data: result.data as ApiResponse<StreamCallData> };
         },
         isLoading: isLoadingCalls || isScheduling,
         getScheduledCall,
