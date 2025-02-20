@@ -549,7 +549,6 @@ export default function PodPage() {
             onClose={() =>
               setState((prev) => ({ ...prev, isCreatedModalOpen: false }))
             }
-            sessionCount={sessionCount} 
             inviteLink={state.inviteLink}
             sessionCode={state.sessionCode}
             isJoining={state.isJoiningCreated}
