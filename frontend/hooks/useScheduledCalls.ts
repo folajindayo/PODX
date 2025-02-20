@@ -87,7 +87,7 @@ export const useScheduledCalls = (): UseScheduledCallsReturn => {
                         data: {
                             status: false,
                             message: 'Failed to schedule call',
-                            data: null
+                            data: {} as StreamCallData 
                         }
                     };
                 }
@@ -97,7 +97,7 @@ export const useScheduledCalls = (): UseScheduledCallsReturn => {
                     data: {
                         status: false,
                         message: error instanceof Error ? error.message : 'Failed to schedule call',
-                        data: null
+                        data: {} as StreamCallData
                     }
                 };
             }
