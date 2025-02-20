@@ -41,15 +41,28 @@ const CreateSessionModal: React.FC<CreateSessionModalProps> = ({
     isOpen, 
     onClose, 
     onCreateSession,
-    sessionCount // Add this parameter
+    sessionCount
 }) => {
-    const [formState, setFormState] = useState<SessionFormState>({
+    const [isCreating, setIsCreating] = useState(false);
+    const [customTime, setCustomTime] = useState("");
+    const [timeError, setTimeError] = useState("");
+    const [formState, setFormState] = useState<SessionFormState>(() => ({
         title: getDefaultSessionTitle(sessionCount),
         type: sessionType.POD,
         isScheduled: false,
         date: undefined,
         time: undefined,
-    });
+    }));
+
+    const updateFormState = React.useCallback((updates: Partial<SessionFormState>) => {
+        setFormState(prev => {
+            const newState = { ...prev, ...updates };
+            if ('isScheduled' in updates) {
+                setTimeError('');
+            }
+            return newState;
+        });
+    }, []);
 
     React.useEffect(() => {
         const defaultTitle = getDefaultSessionTitle(sessionCount);
@@ -58,12 +71,10 @@ const CreateSessionModal: React.FC<CreateSessionModalProps> = ({
         }
     }, [sessionCount, formState.title, updateFormState]);
 
-    const [isCreating, setIsCreating] = useState(false);
-    const [customTime, setCustomTime] = useState("");
-    const [timeError, setTimeError] = useState("");
-
     // Memoized time slots for dropdown
-    const timeSlots = React.useMemo(() => Array.from({ length: 24 }, (_, i) => `${i.toString().padStart(2, "0")}:00`), []);
+    const timeSlots = React.useMemo(() => (
+        Array.from({ length: 24 }, (_, i) => `${i.toString().padStart(2, "0")}:00`)
+    ), []);
 
     const validateTime = React.useCallback((time: string): boolean => {
         const timeRegex = /^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/;
@@ -157,16 +168,6 @@ const CreateSessionModal: React.FC<CreateSessionModalProps> = ({
     }
 }, [formState, onCreateSession, onClose, timeError]);
 
-const updateFormState = React.useCallback((updates: Partial<SessionFormState>) => {
-    setFormState((prev) => {
-        const newState = { ...prev, ...updates };
-        if ('isScheduled' in updates) {
-            setTimeError('');
-        }
-        return newState;
-    });
-}, [setTimeError]);
-    
     const isSubmitDisabled = React.useMemo(() => {
         if (isCreating) return true;
         if (!formState.title.trim()) return true;
