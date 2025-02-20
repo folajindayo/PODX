@@ -532,13 +532,14 @@ export default function PodPage() {
 
       {/* Modals */}
       <React.Suspense fallback={null}>
-        {state.isCreateModalOpen && (
+      {state.isCreateModalOpen && (
           <CreateSessionModal
             isOpen={state.isCreateModalOpen}
             onClose={() =>
               setState((prev) => ({ ...prev, isCreateModalOpen: false }))
             }
             onCreateSession={handleCreateSession}
+            sessionCount={sessionCount}  // Add this line
           />
         )}
 
@@ -546,7 +547,7 @@ export default function PodPage() {
           <CreatedSessionModal
             isOpen={state.isCreatedModalOpen}
             onClose={() =>
-              setState((prev) => ({ ...prev, isCreateModalOpen: false }))
+              setState((prev) => ({ ...prev, isCreatedModalOpen: false }))
             }
             onCreateSession={handleCreateSession}
             sessionCount={sessionCount} 
