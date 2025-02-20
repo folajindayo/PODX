@@ -156,11 +156,10 @@ const CreateSessionModal: React.FC<CreateSessionModalProps> = ({
         setIsCreating(false);
     }
 }, [formState, onCreateSession, onClose, timeError]);
-    
+
 const updateFormState = React.useCallback((updates: Partial<SessionFormState>) => {
     setFormState((prev) => {
         const newState = { ...prev, ...updates };
-        // Reset time error when changing schedule type
         if ('isScheduled' in updates) {
             setTimeError('');
         }
