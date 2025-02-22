@@ -75,12 +75,11 @@ const ResponsiveMeetingLayout: React.FC<ResponsiveMeetingLayoutProps> = ({
         return (
             <div className="meeting-layout screen-share">
                 <SpeakerLayout
-                    participantsBarPosition={screenSize.isSmall ? "bottom" : "right" as const}
+                    participantsBarPosition={screenSize.isSmall ? "bottom" : "right"}
                     mirrorLocalParticipantVideo={true}
                     pageArrowsVisible={participants.length > (screenSize.isSmall ? 2 : 4)}
-                    participants={getVisibleParticipants()}
-                    participantsBarLimit={screenSize.isSmall ? 2 : 4} // Changed from width
-                    participantsBar={{ // Added structured config
+                    participantsBarLimit={screenSize.isSmall ? 2 : 4}
+                    participantsBar={{
                         size: screenSize.isSmall ? "30%" : "25%",
                         gap: 8
                     }}
