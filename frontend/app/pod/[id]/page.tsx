@@ -13,7 +13,6 @@ import {
     useCallStateHooks,
     useConnectedUser,
     StreamVideoEvent,
-    PaginatedGridLayout,
     SpeakerLayout,
     CallControls,
     CallingState,
@@ -111,7 +110,7 @@ export default function MeetingInterface({ params }: MeetingProps) {
         } else {
             console.log(`Call is in ${callingState} state, waiting for it to complete`);
         }
-    }, [id, callingState, call, connectedUser, router, live]);
+    }, [id, callingState, call, connectedUser, live]);
 
     useEffect(() => {
         handleJoinSession();

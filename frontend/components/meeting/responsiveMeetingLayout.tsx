@@ -1,14 +1,35 @@
-// ... existing imports ...
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
+import {
+    SpeakerLayout,
+    GridLayout,
+    StreamVideoParticipant
+} from "@stream-io/video-react-sdk";
 
 interface ResponsiveMeetingLayoutProps {
     hasOngoingScreenShare: boolean;
     isSpeaker: boolean;
     participants: StreamVideoParticipant[];
 }
+const ResponsiveMeetingLayout: React.FC<ResponsiveMeetingLayoutProps> = ({ hasOngoingScreenShare, isSpeaker, participants })
+ => {
+    const [screenSize, setScreenSize] = useState({
+        isSmall: false,
+        isMedium: false,
+    });
 
-const ResponsiveMeetingLayout: React.FC<ResponsiveMeetingLayoutProps> = ({ hasOngoingScreenShare, isSpeaker, participants }) => {
-    // ... existing screen size state ...
+    // Handle responsive breakpoints with resize listener
+    useEffect(() => {
+        const handleResize = () => {
+            setScreenSize({
+                isSmall: window.innerWidth <= 640,
+                isMedium: window.innerWidth > 640 && window.innerWidth <= 1024,
+            });
+        };
+
+        handleResize(); // Initial check
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
 
     const MAX_VISIBLE_PARTICIPANTS = 30;
     const EARLY_JOINERS_LIMIT = 10;
@@ -47,24 +68,37 @@ const ResponsiveMeetingLayout: React.FC<ResponsiveMeetingLayoutProps> = ({ hasOn
         return 12;
     };
 
-    // ... existing screen share and speaker conditions ...
+    if (hasOngoingScreenShare || isSpeaker) {
+        return (
+            <div className="w-full h-full">
+                <SpeakerLayout
+                    participantsBarPosition={screenSize.isSmall ? "bottom" : "right" as const}
+                    mirrorLocalParticipantVideo={true}
+                    pageArrowsVisible={participants.length > (screenSize.isSmall ? 2 : 4)}
+                    className="meeting-layout screen-share"
+                    participantBarWidth={screenSize.isSmall ? "100%" : "25%"}
+                    participants={getVisibleParticipants()}
+                />
+            </div>
+        );
+    }
 
     return (
         <div className="w-full h-full">
-            <PaginatedGridLayout
+            <GridLayout  // Changed from PaginatedGridLayout
                 groupSize={getOptimalGroupSize()}
                 mirrorLocalParticipantVideo={true}
-                pageArrowsVisible={participants.length > getOptimalGroupSize()}
                 className="meeting-layout grid-view"
                 participants={getVisibleParticipants()}
             />
-            {getSummarizedCount() > 0 && (
+            {getSummarizedCount() > 0 && ( // Change condition to use getSummarizedCount
                 <div className="participant-summary">
                     +{getSummarizedCount()}
                 </div>
             )}
         </div>
     );
+
 };
 
 export default ResponsiveMeetingLayout;
