@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import {
     SpeakerLayout,
-    GridLayout,
+    PaginatedGridLayout as GridLayout,
     StreamVideoParticipant
 } from "@stream-io/video-react-sdk";
 

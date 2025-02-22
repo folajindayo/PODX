@@ -110,7 +110,7 @@ export default function MeetingInterface({ params }: MeetingProps) {
         } else {
             console.log(`Call is in ${callingState} state, waiting for it to complete`);
         }
-    }, [id, callingState, call, connectedUser, live]);
+    }, [id, callingState, call, connectedUser, live, router]);
 
     useEffect(() => {
         handleJoinSession();
