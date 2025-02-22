@@ -10,6 +10,7 @@ interface ResponsiveMeetingLayoutProps {
     isSpeaker: boolean;
     participants: StreamVideoParticipant[];
 }
+
 const ResponsiveMeetingLayout: React.FC<ResponsiveMeetingLayoutProps> = ({ 
     hasOngoingScreenShare, 
     isSpeaker, 
@@ -20,7 +21,6 @@ const ResponsiveMeetingLayout: React.FC<ResponsiveMeetingLayoutProps> = ({
         isMedium: false,
     });
 
-    // Handle responsive breakpoints with resize listener
     useEffect(() => {
         const handleResize = () => {
             setScreenSize({
@@ -29,7 +29,7 @@ const ResponsiveMeetingLayout: React.FC<ResponsiveMeetingLayoutProps> = ({
             });
         };
 
-        handleResize(); // Initial check
+        handleResize();
         window.addEventListener('resize', handleResize);
         return () => window.removeEventListener('resize', handleResize);
     }, []);
@@ -37,7 +37,6 @@ const ResponsiveMeetingLayout: React.FC<ResponsiveMeetingLayoutProps> = ({
     const MAX_VISIBLE_PARTICIPANTS = 30;
     const EARLY_JOINERS_LIMIT = 10;
 
-    // Calculate visible and summarized participants
     const getVisibleParticipants = () => {
         if (participants.length <= MAX_VISIBLE_PARTICIPANTS) {
             return participants;
@@ -52,7 +51,6 @@ const ResponsiveMeetingLayout: React.FC<ResponsiveMeetingLayoutProps> = ({
         return participants.length - EARLY_JOINERS_LIMIT;
     };
 
-    // Modified getOptimalGroupSize to consider summarized view
     const getOptimalGroupSize = () => {
         const visibleCount = getVisibleParticipants().length;
         
@@ -79,10 +77,7 @@ const ResponsiveMeetingLayout: React.FC<ResponsiveMeetingLayoutProps> = ({
                     mirrorLocalParticipantVideo={true}
                     pageArrowsVisible={participants.length > (screenSize.isSmall ? 2 : 4)}
                     participantsBarLimit={screenSize.isSmall ? 2 : 4}
-                    participantsBar={{
-                        size: screenSize.isSmall ? "30%" : "25%",
-                        gap: 8
-                    }}
+                    participantViewUI={getVisibleParticipants()}
                 />
             </div>
         );
@@ -102,8 +97,6 @@ const ResponsiveMeetingLayout: React.FC<ResponsiveMeetingLayoutProps> = ({
             )}
         </div>
     );
-
 };
-
 
 export default ResponsiveMeetingLayout;
