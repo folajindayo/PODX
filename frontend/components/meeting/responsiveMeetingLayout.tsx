@@ -87,7 +87,11 @@ const ResponsiveMeetingLayout: React.FC<ResponsiveMeetingLayoutProps> = ({
             <GridLayout
                 groupSize={getOptimalGroupSize()}
                 mirrorLocalParticipantVideo={true}
-                participants={getVisibleParticipants()}
+                participantsBarLimit={getVisibleParticipants().length}
+                participantsBar={{
+                    participants: getVisibleParticipants(),
+                    gap: 8
+                }}
             />
             {getSummarizedCount() > 0 && (
                 <div className="participant-summary">
