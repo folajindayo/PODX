@@ -1,0 +1,73 @@
+.meeting-layout {
+    aspect-ratio: 16/9;
+    max-height: calc(100vh - 80px);
+    width: 100%;
+    position: relative;
+}
+
+.meeting-layout.screen-share {
+    display: grid;
+    grid-template-columns: 1fr auto;
+}
+
+@media (max-width: 640px) {
+    .meeting-layout.screen-share {
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr auto;
+    }
+}
+
+.meeting-layout.grid-view {
+    display: grid;
+    gap: 8px;
+    padding: 8px;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    max-width: 100%;
+    grid-auto-rows: 1fr;
+}
+
+.meeting-layout.single-speaker {
+    height: 100%;
+    max-width: 100%;
+    overflow: hidden;
+}
+
+.participant-summary {
+    position: absolute;
+    bottom: 16px;
+    right: 16px;
+    background: rgba(0, 0, 0, 0.75);
+    color: white;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-weight: 600;
+    z-index: 10;
+    backdrop-filter: blur(4px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+@media (max-width: 640px) {
+    .meeting-layout.grid-view {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 4px;
+    }
+    
+    .participant-summary {
+        bottom: 8px;
+        right: 8px;
+        padding: 4px 12px;
+        font-size: 0.875rem;
+    }
+}
+
+@media (min-width: 641px) and (max-width: 1024px) {
+    .meeting-layout.grid-view {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (min-width: 1025px) {
+    .meeting-layout.grid-view {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}

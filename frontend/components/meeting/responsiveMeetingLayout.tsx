@@ -1,5 +1,5 @@
-import React from "react";
-import { SpeakerLayout, PaginatedGridLayout, StreamVideoParticipant } from "@stream-io/video-react-sdk";
+// ... existing imports ...
+import { useState, useEffect } from "react";
 
 interface ResponsiveMeetingLayoutProps {
     hasOngoingScreenShare: boolean;
@@ -8,35 +8,61 @@ interface ResponsiveMeetingLayoutProps {
 }
 
 const ResponsiveMeetingLayout: React.FC<ResponsiveMeetingLayoutProps> = ({ hasOngoingScreenShare, isSpeaker, participants }) => {
-    // Get breakpoints using window width
-    const isSmallScreen = window.matchMedia("(max-width: 640px)").matches;
-    const isMediumScreen = window.matchMedia("(min-width: 641px) and (max-width: 1024px)").matches;
+    // ... existing screen size state ...
 
-    if (hasOngoingScreenShare || isSpeaker) {
-        return (
-            <div className="w-full h-full">
-                <SpeakerLayout
-                    participantsBarPosition={isSmallScreen ? "bottom" : "right"}
-                    mirrorLocalParticipantVideo={true}
-                    pageArrowsVisible={participants.length > (isSmallScreen ? 3 : 4)}
-                />
-            </div>
-        );
-    }
+    const MAX_VISIBLE_PARTICIPANTS = 30;
+    const EARLY_JOINERS_LIMIT = 10;
+
+    // Calculate visible and summarized participants
+    const getVisibleParticipants = () => {
+        if (participants.length <= MAX_VISIBLE_PARTICIPANTS) {
+            return participants;
+        }
+        return participants.slice(0, EARLY_JOINERS_LIMIT);
+    };
+
+    const getSummarizedCount = () => {
+        if (participants.length <= MAX_VISIBLE_PARTICIPANTS) {
+            return 0;
+        }
+        return participants.length - EARLY_JOINERS_LIMIT;
+    };
+
+    // Modified getOptimalGroupSize to consider summarized view
+    const getOptimalGroupSize = () => {
+        const visibleCount = getVisibleParticipants().length;
+        
+        if (screenSize.isSmall) {
+            return visibleCount <= 2 ? 2 : 4;
+        }
+        
+        if (screenSize.isMedium) {
+            if (visibleCount <= 2) return 2;
+            if (visibleCount <= 6) return 6;
+            return 8;
+        }
+
+        if (visibleCount <= 2) return 2;
+        if (visibleCount <= 9) return 9;
+        return 12;
+    };
+
+    // ... existing screen share and speaker conditions ...
 
     return (
         <div className="w-full h-full">
             <PaginatedGridLayout
-                groupSize={
-                    isSmallScreen
-                        ? 4 // Mobile: 2x2 grid
-                        : isMediumScreen
-                        ? 6 // Tablet: 2x3 grid
-                        : 9 // Desktop: 3x3 grid
-                }
+                groupSize={getOptimalGroupSize()}
                 mirrorLocalParticipantVideo={true}
-                pageArrowsVisible={true}
+                pageArrowsVisible={participants.length > getOptimalGroupSize()}
+                className="meeting-layout grid-view"
+                participants={getVisibleParticipants()}
             />
+            {getSummarizedCount() > 0 && (
+                <div className="participant-summary">
+                    +{getSummarizedCount()}
+                </div>
+            )}
         </div>
     );
 };
