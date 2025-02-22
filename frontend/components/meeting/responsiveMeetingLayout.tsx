@@ -55,24 +55,18 @@ const ResponsiveMeetingLayout: React.FC<ResponsiveMeetingLayoutProps> = ({
         const visibleCount = getVisibleParticipants().length;
         
         if (screenSize.isSmall) {
-            if (visibleCount === 1) return 1;
-            if (visibleCount === 2) return 2;
-            return visibleCount <= 4 ? 4 : 6;
+            return visibleCount <= 2 ? 2 : 4;
         }
         
         if (screenSize.isMedium) {
-            if (visibleCount === 1) return 1;
-            if (visibleCount === 2) return 2;
-            if (visibleCount <= 4) return 4;
-            return visibleCount <= 6 ? 6 : 9;
+            if (visibleCount <= 2) return 2;
+            if (visibleCount <= 6) return 6;
+            return 8;
         }
 
-        // Large screens
-        if (visibleCount === 1) return 1;
-        if (visibleCount === 2) return 2;
-        if (visibleCount <= 4) return 4;
-        if (visibleCount <= 6) return 6;
-        return visibleCount <= 9 ? 9 : 12;
+        if (visibleCount <= 2) return 2;
+        if (visibleCount <= 9) return 9;
+        return 12;
     };
 
     if (hasOngoingScreenShare || isSpeaker) {
@@ -83,16 +77,6 @@ const ResponsiveMeetingLayout: React.FC<ResponsiveMeetingLayoutProps> = ({
                     participantsBarLimit={screenSize.isSmall ? 2 : 4}
                     pageArrowsVisible={participants.length > (screenSize.isSmall ? 2 : 4)}
                     mirrorLocalParticipantVideo={true}
-                    participantsBar={{
-                        participants: getVisibleParticipants(),
-                        gap: 8,
-                        style: {
-                            background: '#1E1E1E',
-                            padding: '8px',
-                            borderRadius: '12px',
-                            margin: '8px'
-                        }
-                    }}
                 />
             </div>
         );
@@ -103,15 +87,6 @@ const ResponsiveMeetingLayout: React.FC<ResponsiveMeetingLayoutProps> = ({
             <GridLayout
                 groupSize={getOptimalGroupSize()}
                 mirrorLocalParticipantVideo={true}
-                participantsBar={{
-                    participants: getVisibleParticipants(),
-                    gap: 12,
-                    style: {
-                        background: '#1E1E1E',
-                        padding: '16px',
-                        borderRadius: '12px'
-                    }
-                }}
             />
             {getSummarizedCount() > 0 && (
                 <div className="participant-summary">

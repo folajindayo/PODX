@@ -1,20 +1,17 @@
+/* Base layout styles */
 .meeting-layout {
     aspect-ratio: 16/9;
     max-height: calc(100vh - 80px);
     width: 100%;
     position: relative;
+    background: #121212;
+    min-height: 100vh;
+    padding: 16px;
 }
 
 .meeting-layout.screen-share {
     display: grid;
     grid-template-columns: 1fr auto;
-}
-
-@media (max-width: 640px) {
-    .meeting-layout.screen-share {
-        grid-template-columns: 1fr;
-        grid-template-rows: 1fr auto;
-    }
 }
 
 .meeting-layout.grid-view {
@@ -32,11 +29,67 @@
     overflow: hidden;
 }
 
+/* Participant styles */
+.str-video__participant {
+    border-radius: 12px !important;
+    overflow: hidden !important;
+    background: #1E1E1E !important;
+    transition: all 0.3s ease !important;
+}
+
+.str-video__participant--one {
+    aspect-ratio: 16/9;
+    max-height: 80vh;
+    margin: auto;
+}
+
+.str-video__participant--two {
+    aspect-ratio: 4/3;
+}
+
+.str-video__participant--speaking {
+    box-shadow: 0 0 0 2px #6032F6 !important;
+    transform: scale(1.02);
+}
+
+.str-video__participant-details {
+    background: rgba(30, 30, 30, 0.8) !important;
+    backdrop-filter: blur(8px);
+    border-radius: 8px;
+    padding: 8px 12px;
+    margin: 8px;
+}
+
+/* Grid and layout styles */
+.str-video__grid {
+    gap: 12px !important;
+    padding: 16px !important;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)) !important;
+}
+
+.str-video__grid-layout {
+    gap: 12px !important;
+    padding: 16px !important;
+    background: #1E1E1E !important;
+    border-radius: 12px !important;
+}
+
+/* Participants bar styles */
+.str-video__participants-bar {
+    gap: 8px !important;
+    background: #1E1E1E !important;
+    padding: 8px !important;
+    border-radius: 12px !important;
+    margin: 8px !important;
+    width: var(--str-video__participants-bar-width, 240px) !important;
+}
+
+/* Summary counter styles */
 .participant-summary {
     position: absolute;
     bottom: 16px;
     right: 16px;
-    background: rgba(0, 0, 0, 0.75);
+    background: rgba(96, 50, 246, 0.9);
     color: white;
     padding: 8px 16px;
     border-radius: 20px;
@@ -46,10 +99,21 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
+/* Responsive styles */
 @media (max-width: 640px) {
+    .meeting-layout.screen-share {
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr auto;
+    }
+
     .meeting-layout.grid-view {
         grid-template-columns: repeat(2, 1fr);
         gap: 4px;
+    }
+
+    .str-video__participants-bar {
+        width: 100% !important;
+        height: var(--str-video__participants-bar-height, 120px) !important;
     }
     
     .participant-summary {
@@ -70,46 +134,4 @@
     .meeting-layout.grid-view {
         grid-template-columns: repeat(4, 1fr);
     }
-}
-
-.str-video__participant {
-    border-radius: 12px !important;
-    overflow: hidden !important;
-    background: #1E1E1E !important;
-    transition: all 0.3s ease !important;
-}
-
-.str-video__participant--one {
-    aspect-ratio: 16/9;
-    max-height: 80vh;
-    margin: auto;
-}
-
-.str-video__participant--two {
-    aspect-ratio: 4/3;
-}
-
-.str-video__grid {
-    gap: 12px !important;
-    padding: 16px !important;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)) !important;
-}
-
-.meeting-layout {
-    background: #121212;
-    min-height: 100vh;
-    padding: 16px;
-}
-
-.str-video__participant-details {
-    background: rgba(30, 30, 30, 0.8) !important;
-    backdrop-filter: blur(8px);
-    border-radius: 8px;
-    padding: 8px 12px;
-    margin: 8px;
-}
-
-.str-video__participant--speaking {
-    box-shadow: 0 0 0 2px #6032F6 !important;
-    transform: scale(1.02);
 }
