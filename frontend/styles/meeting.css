@@ -71,3 +71,45 @@
         grid-template-columns: repeat(4, 1fr);
     }
 }
+
+.str-video__participant {
+    border-radius: 12px !important;
+    overflow: hidden !important;
+    background: #1E1E1E !important;
+    transition: all 0.3s ease !important;
+}
+
+.str-video__participant--one {
+    aspect-ratio: 16/9;
+    max-height: 80vh;
+    margin: auto;
+}
+
+.str-video__participant--two {
+    aspect-ratio: 4/3;
+}
+
+.str-video__grid {
+    gap: 12px !important;
+    padding: 16px !important;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)) !important;
+}
+
+.meeting-layout {
+    background: #121212;
+    min-height: 100vh;
+    padding: 16px;
+}
+
+.str-video__participant-details {
+    background: rgba(30, 30, 30, 0.8) !important;
+    backdrop-filter: blur(8px);
+    border-radius: 8px;
+    padding: 8px 12px;
+    margin: 8px;
+}
+
+.str-video__participant--speaking {
+    box-shadow: 0 0 0 2px #6032F6 !important;
+    transform: scale(1.02);
+}
