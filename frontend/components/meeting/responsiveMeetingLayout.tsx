@@ -10,8 +10,11 @@ interface ResponsiveMeetingLayoutProps {
     isSpeaker: boolean;
     participants: StreamVideoParticipant[];
 }
-const ResponsiveMeetingLayout: React.FC<ResponsiveMeetingLayoutProps> = ({ hasOngoingScreenShare, isSpeaker, participants })
- => {
+const ResponsiveMeetingLayout: React.FC<ResponsiveMeetingLayoutProps> = ({ 
+    hasOngoingScreenShare, 
+    isSpeaker, 
+    participants 
+}) => {
     const [screenSize, setScreenSize] = useState({
         isSmall: false,
         isMedium: false,
@@ -100,5 +103,6 @@ const ResponsiveMeetingLayout: React.FC<ResponsiveMeetingLayoutProps> = ({ hasOn
     );
 
 };
+
 
 export default ResponsiveMeetingLayout;
