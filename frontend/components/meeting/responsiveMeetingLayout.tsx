@@ -73,28 +73,28 @@ const ResponsiveMeetingLayout: React.FC<ResponsiveMeetingLayoutProps> = ({
 
     if (hasOngoingScreenShare || isSpeaker) {
         return (
-            <div className="w-full h-full">
+            <div className="meeting-layout screen-share">
                 <SpeakerLayout
                     participantsBarPosition={screenSize.isSmall ? "bottom" : "right" as const}
                     mirrorLocalParticipantVideo={true}
                     pageArrowsVisible={participants.length > (screenSize.isSmall ? 2 : 4)}
-                    className="meeting-layout screen-share"
                     participantBarWidth={screenSize.isSmall ? "100%" : "25%"}
                     participants={getVisibleParticipants()}
+                    participantsBarHeight={screenSize.isSmall ? "30%" : "auto"} // Add this line
+                    participantsBarGap={8} // Add this line
                 />
             </div>
         );
     }
 
     return (
-        <div className="w-full h-full">
-            <GridLayout  // Changed from PaginatedGridLayout
+        <div className="meeting-layout grid-view">
+            <GridLayout
                 groupSize={getOptimalGroupSize()}
                 mirrorLocalParticipantVideo={true}
-                className="meeting-layout grid-view"
                 participants={getVisibleParticipants()}
             />
-            {getSummarizedCount() > 0 && ( // Change condition to use getSummarizedCount
+            {getSummarizedCount() > 0 && (
                 <div className="participant-summary">
                     +{getSummarizedCount()}
                 </div>
